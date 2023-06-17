@@ -71,8 +71,35 @@ module.exports={
         }),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            template: "index.html"
-        })
+            template: "index.html",
+            filename:'index.html',
+
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/pages/comments.html",
+            filename:'comments.html',
+
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/pages/offs.html",
+            filename:'offs.html',
+
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/pages/orders.html",
+            filename:'orders.html',
+
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/pages/products.html",
+            filename:'products.html',
+
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/pages/users.html",
+            filename:'users.html',
+
+        }),
     ],
     devServer: {
         static: {
