@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "strict": true,
+    "strict": false,
     "target": "ES5",
     "module": "ES2015",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "removeComments": true,
-    "preserveConstEnums": true,
      "moduleResolution": "Node",
     "sourceMap": true
   },

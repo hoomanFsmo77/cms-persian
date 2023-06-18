@@ -6,7 +6,9 @@ const database=require('../database/database')
 
 router.get('/',(req,res)=>{
     database('comments').
-    select('*').
+    join('users','comments.userID','=','users.id').
+    join('products','comments.productId','=','products.id').
+    select('comments.userID','comments.productId','comments.body','comments.id','comments.isAccept','comments.date','comments.hour','users.firstname','users.lastname','products.title as productTitle').
     then(response=>{
         res.status(200).send(h.responseHandler(false,null,response))
     }).catch(err=>{
@@ -16,8 +18,10 @@ router.get('/',(req,res)=>{
 router.get('/:id',(req,res)=>{
     const id=req.params.id
     database('comments').
-    select('*').
-    where({id}).
+    join('users','comments.userID','=','users.id').
+    join('products','comments.productId','=','products.id').
+    select('comments.userID','comments.productId','comments.body','comments.id','comments.isAccept','comments.date','comments.hour','users.firstname','users.lastname','products.title as productTitle').
+    where('comments.id','=',id).
     then(response=>{
         if(response.length>0){
             res.status(200).send(h.responseHandler(false,null,response[0]))

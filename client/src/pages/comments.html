@@ -24,35 +24,9 @@
       </div>
     </div>
 
-    <!-- Show Comment Details -->
-    <div class="modal" id="details-modal">
-      <div class="text-modal">
-        <p id="comment-body">
-          لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-          استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در
-          ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و
-          کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی
-          در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می
-          طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی
-          الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این
-          صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و
-          شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای
-          اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده
-          قرار گیرد.
-        </p>
-        <button class="text-modal-close-btn">بستن</button>
-      </div>
-    </div>
 
-    <!-- Answer & Edit Modal -->
-    <div class="modal" id="answer-edit-modal">
-      <div class="answer-to-comment-modal">
-        <form action="#">
-          <textarea name="" id="answer-edit-modal-textarea" cols="50" rows="20"></textarea>
-          <button class="answer-submit-btn">ثبت پاسخ</button>
-        </form>
-      </div>
-    </div>
+
+
 
     <aside class="sidebar">
       <h1 class="sidebar-title">به داشبورد خود خوش آمدید</h1>
@@ -93,17 +67,13 @@
 
     <div class="main">
       <div class="header">
-        <div class="admin-profile">
-          <img
-            src=""
-            alt="Admin Profile"
-            id="admin-profile"
-          />
-          <div>
-            <h1 id="admin-info"></h1>
-            <h3 id="admin-task"></h3>
+          <div x-data="admin" class="admin-profile">
+              <img :src="img" alt="Admin Profile" id="admin-profile" />
+              <div>
+                  <h1 id="admin-info" x-text="fullName"></h1>
+                  <h3 id="admin-task" x-text="task"></h3>
+              </div>
           </div>
-        </div>
 
         <div class="header-left-section">
           <div class="search-box">
@@ -120,9 +90,64 @@
         </div>
       </div>
 
-      <div class="cms-main">
-        <h1 class="cms-title">کامنت های محصولات</h1>
+      <div x-data="comments" x-init="getCommentsList()" class="cms-main">
 
+          <!-- Show Comment Details -->
+          <template x-teleport="body">
+              <div :style="detailModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="details-modal">
+                  <div class="text-modal">
+                      <p x-text="getComment().body" id="comment-body">
+                      </p>
+                      <button @click="detailModalFlag=false" class="text-modal-close-btn">بستن</button>
+                  </div>
+              </div>
+          </template>
+          <!-- Answer & Edit Modal -->
+          <template x-teleport="body">
+              <div :style="editModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="answer-edit-modal">
+                  <div class="answer-to-comment-modal">
+                      <form action="#">
+                          <textarea  x-model="content" name="" id="answer-edit-modal-textarea" cols="50" rows="20"></textarea>
+                          <button @click="editComment" class="answer-submit-btn">ثبت پاسخ</button>
+                          <button @click="editModalFlag=false" class="answer-submit-btn">بستن</button>
+                      </form>
+                  </div>
+              </div>
+          </template>
+
+
+
+        <h1 class="cms-title">کامنت های محصولات</h1>
+          <table class="cms-table comments-table">
+              <tr>
+                  <th>اسم کاربر</th>
+                  <th>محصول</th>
+                  <th>کامنت</th>
+                  <th>تاریخ</th>
+                  <th>ساعت</th>
+              </tr>
+
+              <template x-for="item in commentsList">
+                  <tr>
+                      <td x-text="`${item.firstname} ${item.lastname}`"></td>
+                      <td x-text="item.productTitle"></td>
+                      <td>
+                          <button @click="detailModalFlag=true;commentId=item.id">دیدن متن</button>
+                      </td>
+                      <td x-text="item.date"></td>
+                      <td x-text="item.hour"></td>
+
+                      <td>
+                          <button >حذف</button>
+<!--                          <button>رد</button>-->
+                          <button>تایید</button>`
+                          <button >پاسخ</button>
+                          <button @click="openEditModal(item.id)">ویرایش</button>
+                      </td>
+                  </tr>
+              </template>
+
+          </table>
 
         
       </div>

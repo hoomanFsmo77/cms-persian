@@ -13,107 +13,7 @@
 
   </head>
   <body>
-    <!-- product details modal -->
-    <div class="modal" id="details-modal">
-      <div class="details-modal">
-        <table class="cms-table">
-          <tr>
-            <th>محبوبیت</th>
-            <th>میزان فروش</th>
-            <th>تعداد رنگ بندی</th>
-          </tr>
-          <tr>
-            <td id="pop-td">90%</td>
-            <td id="sale-td">199,000,000</td>
-            <td id="color-td">4</td>
-          </tr>
-        </table>
-      </div>
-    </div>
 
-    <!-- Products Edit Modal -->
-    <div class="modal" id="edit-modal">
-      <form action="#" class="edit-modal-form">
-        <h1>اطلاعات جدید را وارد نمایید</h1>
-
-        <div class="add-product-form-group">
-          <span><i class="bi bi-cursor-text"></i></span>
-          <input
-            type="text"
-            placeholder="اسم محصول را بنویسید"
-            class="add-product-input"
-            id="edit-product-title"
-          />
-        </div>
-        <div class="add-product-form-group">
-          <span><i class="bi bi-currency-dollar"></i></span>
-          <input
-            type="text"
-            placeholder="قیمت محصول را بنویسید"
-            class="add-product-input"
-            id="edit-product-price"
-          />
-        </div>
-        <div class="add-product-form-group">
-          <span><i class="bi bi-bag"></i></span>
-          <input
-            type="text"
-            placeholder="موجودی محصول را بنویسید"
-            class="add-product-input"
-            id="edit-product-count"
-          />
-        </div>
-        <div class="add-product-form-group">
-          <span><i class="bi bi-card-image"></i></span>
-          <input
-            type="text"
-            placeholder="میزان محبوبیت محصول را بنویسید"
-            class="add-product-input"
-            id="edit-product-pop"
-          />
-        </div>
-        <div class="add-product-form-group">
-          <span><i class="bi bi-card-image"></i></span>
-          <input
-            type="text"
-            placeholder="میزان فروش محصول را بنویسید"
-            class="add-product-input"
-            id="edit-product-sale"
-          />
-        </div>
-        <div class="add-product-form-group">
-          <span><i class="bi bi-card-image"></i></span>
-          <input
-            type="text"
-            placeholder="تعداد رنگ محصول را بنویسید"
-            class="add-product-input"
-            id="edit-product-colors"
-          />
-        </div>
-        <div class="add-product-form-group">
-          <span><i class="bi bi-card-image"></i></span>
-          <input
-            type="text"
-            placeholder="آدرس عکس محصول را بنویسید"
-            class="add-product-input"
-            id="edit-product-img"
-          />
-        </div>
-
-        <button class="edit-form-submit" id="edit-modal-submit">تغییر اطلاعات محصول</button>
-      </form>
-    </div>
-
-    <!-- Delete Modal -->
-    <div class="modal" id="delete-modal">
-      <div class="delete-modal">
-        <h1>ایا از حذف محصول اطمینان دارید؟</h1>
-        <div class="delete-modal-btns">
-          <button class="delete-btn delete-modal-accept-btn" id="confirm-delete-product">بله</button>
-          <button class="delete-btn delete-modal-reject-btn" id="cancel-delete-product">خیر</button>
-        </div>
-      </div>
-    </div>
 
     <aside class="sidebar">
       <h1 class="sidebar-title">به داشبورد خود خوش آمدید</h1>
@@ -154,11 +54,11 @@
 
     <div class="main">
       <div class="header">
-        <div class="admin-profile">
-          <img src="" alt="Admin Profile" id="admin-profile" />
+        <div x-data="admin" class="admin-profile">
+          <img :src="img" alt="Admin Profile" id="admin-profile" />
           <div>
-            <h1 id="admin-info"></h1>
-            <h3 id="admin-task"></h3>
+            <h1 id="admin-info" x-text="fullName"></h1>
+            <h3 id="admin-task" x-text="task"></h3>
           </div>
         </div>
 
@@ -177,14 +77,132 @@
         </div>
       </div>
 
-      <div class="products-main">
+      <div x-data="products" x-init="getProductList()" class="products-main">
+
+          <!-- Delete Modal -->
+          <template x-teleport="body">
+              <div  :style="onDeleteModal ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="delete-modal">
+                  <div  class="delete-modal">
+                      <h1>ایا از حذف محصول اطمینان دارید؟</h1>
+                      <div class="delete-modal-btns">
+                          <button @click="removeProduct(productId)" class="delete-btn delete-modal-accept-btn" id="confirm-delete-product">بله</button>
+                          <button @click="onDeleteModal=false" class="delete-btn delete-modal-reject-btn" id="cancel-delete-product">خیر</button>
+                      </div>
+                  </div>
+              </div>
+          </template>
+          <!-- product details modal -->
+          <template x-teleport="body">
+              <div   :style="onDetailModal ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="details-modal">
+                  <div  class="details-modal">
+                      <table class="cms-table">
+                          <tr>
+                              <th>محبوبیت</th>
+                              <th>میزان فروش</th>
+                              <th>تعداد رنگ بندی</th>
+                          </tr>
+                          <tr>
+                              <td x-text="getProductDetail()?.popularity ?? ''" id="pop-td"></td>
+                              <td x-text="getProductDetail()?.sale ?? ''" id="sale-td"></td>
+                              <td x-text="getProductDetail()?.colors ?? ''"  id="color-td">4</td>
+                          </tr>
+                      </table>
+                      <button @click="onDetailModal=false" class="delete-btn delete-modal-reject-btn" >بستن</button>
+                  </div>
+              </div>
+          </template>
+          <!-- Products Edit Modal -->
+          <template x-teleport="body">
+              <div  :style="onEditModal ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="edit-modal">
+                  <form @submit.prevent action="#" class="edit-modal-form">
+                      <h1>اطلاعات جدید را وارد نمایید</h1>
+
+                      <div class="add-product-form-group">
+                          <span><i class="bi bi-cursor-text"></i></span>
+                          <input
+                                  x-model.number="title"
+                                  type="text"
+                                  placeholder="اسم محصول را بنویسید"
+                                  class="add-product-input"
+                                  id="edit-product-title"
+                          />
+                      </div>
+                      <div class="add-product-form-group">
+                          <span><i class="bi bi-currency-dollar"></i></span>
+                          <input
+                                  x-model.number="price"
+                                  type="text"
+                                  placeholder="قیمت محصول را بنویسید"
+                                  class="add-product-input"
+                                  id="edit-product-price"
+                          />
+                      </div>
+                      <div class="add-product-form-group">
+                          <span><i class="bi bi-bag"></i></span>
+                          <input
+                                  x-model.number="count"
+                                  type="text"
+                                  placeholder="موجودی محصول را بنویسید"
+                                  class="add-product-input"
+                                  id="edit-product-count"
+                          />
+                      </div>
+                      <div class="add-product-form-group">
+                          <span><i class="bi bi-card-image"></i></span>
+                          <input
+                                  x-model.number="popularity"
+                                  type="text"
+                                  placeholder="میزان محبوبیت محصول را بنویسید"
+                                  class="add-product-input"
+                                  id="edit-product-pop"
+                          />
+                      </div>
+                      <div class="add-product-form-group">
+                          <span><i class="bi bi-card-image"></i></span>
+                          <input
+                                  x-model.number="sale"
+                                  type="text"
+                                  placeholder="میزان فروش محصول را بنویسید"
+                                  class="add-product-input"
+                                  id="edit-product-sale"
+                          />
+                      </div>
+                      <div class="add-product-form-group">
+                          <span><i class="bi bi-card-image"></i></span>
+                          <input
+                                  x-model.number="colors"
+                                  type="text"
+                                  placeholder="تعداد رنگ محصول را بنویسید"
+                                  class="add-product-input"
+                                  id="edit-product-colors"
+                          />
+                      </div>
+                      <div class="add-product-form-group">
+                          <span><i class="bi bi-card-image"></i></span>
+                          <input
+                                  x-model.number="img"
+                                  type="text"
+                                  placeholder="آدرس عکس محصول را بنویسید"
+                                  class="add-product-input"
+                                  id="edit-product-img"
+                          />
+                      </div>
+
+                      <button @click="editProduct" type="submit" class="edit-form-submit" id="edit-modal-submit">تغییر اطلاعات محصول</button>
+                      <button type="button" @click="closeEditModal" class="edit-form-submit" id="edit-modal-submit2">بستن</button>
+                  </form>
+              </div>
+          </template>
+
+
         <h1 class="products-title">افزودن محصول جدید</h1>
 
-        <form action="#" class="add-product-form">
+        <form  @submit.prevent="addNewProduct" action="#" class="add-product-form">
           <div class="add-product-form-wrap">
             <div class="add-product-form-group">
               <span><i class="bi bi-cursor-text"></i></span>
               <input
+                 x-model="title"
                 type="text"
                 placeholder="اسم محصول را بنویسید"
                 class="add-product-input"
@@ -194,6 +212,7 @@
             <div class="add-product-form-group">
               <span><i class="bi bi-currency-dollar"></i></span>
               <input
+                x-model.number="price"
                 type="text"
                 placeholder="قیمت محصول را بنویسید"
                 class="add-product-input"
@@ -203,6 +222,7 @@
             <div class="add-product-form-group">
               <span><i class="bi bi-bag"></i></span>
               <input
+                 x-model.number="count"
                 type="text"
                 placeholder="موجودی محصول را بنویسید"
                 class="add-product-input"
@@ -212,6 +232,7 @@
             <div class="add-product-form-group">
               <span><i class="bi bi-card-image"></i></span>
               <input
+                 x-model="img"
                 type="text"
                 placeholder="آدرس عکس محصول را بنویسید"
                 class="add-product-input"
@@ -221,6 +242,7 @@
             <div class="add-product-form-group">
               <span><i class="bi bi-card-image"></i></span>
               <input
+                 x-model.number="popularity"
                 type="text"
                 placeholder="میزان محبوبیت محصول را بنویسید"
                 class="add-product-input"
@@ -230,6 +252,7 @@
             <div class="add-product-form-group">
               <span><i class="bi bi-card-image"></i></span>
               <input
+                x-model.number="sale"
                 type="text"
                 placeholder="میزان فروش محصول را بنویسید"
                 class="add-product-input"
@@ -239,6 +262,7 @@
             <div class="add-product-form-group">
               <span><i class="bi bi-card-image"></i></span>
               <input
+                 x-model.number="colors"
                 type="text"
                 placeholder="تعداد رنگ بندی محصول را بنویسید"
                 class="add-product-input"
@@ -249,9 +273,40 @@
           <button class="add-product-submit" id="add-new-product-btn">ثبت محصول</button>
         </form>
 
+          <table  class="products-table products-content">
+              <tr class="products-table-heading-tr">
+                  <th>عکس</th>
+                  <th>اسم</th>
+                  <th>قیمت</th>
+                  <th>موجودی</th>
+              </tr>
+              <template x-for="item in productsList">
+                  <tr class="products-table-tr">
+                      <td>
+                          <img
+                                  :src="imageBase.concat(item.img)"
+                                  class="products-table-img"
+                                  alt="Product Image"
+                          />
+                      </td>
+
+                      <td x-text="item.title"></td>
+                      <td x-text="item.price+'تومان'"> </td>
+                      <td x-text="item.count"></td>
+
+                      <td>
+                          <button @click="toggleDetailModal(item.id)" class="products-table-button" >جزییات</button>
+                          <button @click="toggleDeleteModal(item.id)" class="products-table-button" >حذف</button>
+                          <button @click="toggleEditModal(item.id)" class="products-table-button" >ویرایش</button>
+                      </td>
+                  </tr>
+              </template>
+
+          </table>
+
+
       </div>
     </div>
-
 <!--    <script src="content/js/adminsInfo.js"></script>-->
 <!--    <script src="content/js/products.js"></script>-->
 <!--    <script src="content/js/addNewProduct.js"></script>-->

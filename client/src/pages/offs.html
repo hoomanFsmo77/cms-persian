@@ -63,17 +63,13 @@
 
     <div class="main">
       <div class="header">
-        <div class="admin-profile">
-          <img
-            src=""
-            alt="Admin Profile"
-            id="admin-profile"
-          />
-          <div>
-            <h1 id="admin-info"></h1>
-            <h3 id="admin-task"></h3>
+          <div x-data="admin" class="admin-profile">
+              <img :src="img" alt="Admin Profile" id="admin-profile" />
+              <div>
+                  <h1 id="admin-info" x-text="fullName"></h1>
+                  <h3 id="admin-task" x-text="task"></h3>
+              </div>
           </div>
-        </div>
 
         <div class="header-left-section">
           <div class="search-box">
