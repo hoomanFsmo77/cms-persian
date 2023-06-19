@@ -23,25 +23,7 @@
       </div>
     </div>
 
-    <div class="modal">
-      <div class="order-details-modal">
-        <table class="cms-table">
-          <tr>
-            <th>میزان فروش محصول</th>
-            <th>میزان رضایت</th>
-            <th>موجودی محصول</th>
-            <th>تعداد فروش</th>
-          </tr>
 
-          <tr>
-            <td>199,000,000</td>
-            <td>89/100</td>
-            <td>35</td>
-            <td>31</td>
-          </tr>
-        </table>
-      </div>
-    </div>
 
     <aside class="sidebar">
       <h1 class="sidebar-title">به داشبورد خود خوش آمدید</h1>
@@ -105,11 +87,47 @@
         </div>
       </div>
 
-      <div class="cms-main">
+      <div x-data="orders" @keyup.esc.window="closeAllModal" x-init="getOrdersList" class="cms-main">
+<!--            detail modal-->
+          <template x-teleport="body">
+              <div :style="detailModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" >
+                  <div class="order-details-modal">
+                      <table class="cms-table">
+                          <tr>
+                              <th>میزان فروش محصول</th>
+                              <th>میزان رضایت</th>
+                              <th>موجودی محصول</th>
+                              <th>تعداد فروش</th>
+                          </tr>
+
+                          <tr>
+                              <td x-text="getOrder?.sale ?? ''"></td>
+                              <td x-text="getOrder?.popularity ?? ''"></td>
+                              <td x-text="getOrder?.count ?? ''"></td>
+                              <td x-text="getOrder?.sale_count ?? ''"></td>
+                          </tr>
+                      </table>
+                  </div>
+              </div>
+          </template>
+          <!-- Delete Modal -->
+          <template x-teleport="body">
+              <div :style="deleteModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="delete-modal">
+                  <div class="delete-modal">
+                      <h1>ایا از حذف اردر اطمینان دارید؟</h1>
+                      <div class="delete-modal-btns">
+                          <button @click="deleteOrder" class="delete-btn delete-modal-accept-btn">بله</button>
+                          <button @click="deleteModalFlag=false" class="delete-btn delete-modal-reject-btn">خیر</button>
+                      </div>
+                  </div>
+              </div>
+          </template>
+
+
 
         <h1 class="cms-title">لیست سفارشات ثبت شده</h1>
 
-        <div class="cms-empty-err">هیچ سفارشی یافت نشد</div>
+        <div x-show="ordersList.length===0" class="cms-empty-err">هیچ سفارشی یافت نشد</div>
 
         <table class="cms-table">
           <tr>
@@ -119,29 +137,33 @@
             <th>ساعت سفارش</th>
             <th>مبلغ کل</th>
             <th>تخفیف اعمال شده</th>
-            <th>مبلغ پایانی</th>
+            <th>عملیات</th>
           </tr>
+            <template x-for="item in ordersList">
+                <tr>
+                    <td>
+                        <a href="#" x-text="item.productTitle"></a>
+                    </td>
+                    <td>
+                        <a href="#" x-text="`${item.firstname} ${item.lastname}`"></a>
+                    </td>
 
-          <tr>
-            <td>
-              <a href="#">لپتاپ Asus</a>
-            </td>
-            <td>
-              <a href="#">امین سعیدی</a>
-            </td>
+                    <td x-text="item.date"></td>
+                    <td x-text="item.hour"></td>
+                    <td x-text="item.price"></td>
+                    <td x-text="item.off+'%'"></td>
 
-            <td>۱۲ مرداد ۱۴۰۱</td>
-            <td>12:24</td>
-            <td>10%</td>
-            <td>90,000</td>
+                    <td>
+                        <button @click="openDetailModal(item.id)">جزییات</button>
+                        <button @click="openDeleteModal(item.id)">حذف</button>
+                        <button>بعدا بررسی می‌شود</button>
+                        <button @click="changeOrderStatus(0,item.id)" x-show="item.isActive===1">رد</button>
+                        <button @click="changeOrderStatus(1,item.id)" x-show="item.isActive===0">تایید</button>
+                    </td>
+                </tr>
+            </template>
 
-            <td>
-              <button>جزییات</button>
-              <button>حذف</button>
-              <button>بعدا بررسی می‌شود</button>
-              <button>تایید</button>
-            </td>
-          </tr>
+
         </table>
       </div>
 

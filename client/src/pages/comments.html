@@ -13,16 +13,7 @@
 
   </head>
   <body>
-    <!-- Delete Modal -->
-    <div class="modal" id="delete-modal">
-      <div class="delete-modal">
-        <h1>ایا از حذف محصول اطمینان دارید؟</h1>
-        <div class="delete-modal-btns">
-          <button class="delete-btn delete-modal-accept-btn">بله</button>
-          <button class="delete-btn delete-modal-reject-btn">خیر</button>
-        </div>
-      </div>
-    </div>
+
 
 
 
@@ -96,25 +87,51 @@
           <template x-teleport="body">
               <div :style="detailModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="details-modal">
                   <div class="text-modal">
-                      <p x-text="getComment().body" id="comment-body">
+                      <p x-text="getComment()?.body ?? ''" id="comment-body">
                       </p>
+                      <template x-for="replyItem in getComment()?.reply ?? []">
+                          <p x-text="'- '+replyItem?.body ?? ''" id="reply-body"></p>
+                      </template>
                       <button @click="detailModalFlag=false" class="text-modal-close-btn">بستن</button>
                   </div>
               </div>
           </template>
-          <!-- Answer & Edit Modal -->
+          <!--  Edit Modal -->
           <template x-teleport="body">
-              <div :style="editModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="answer-edit-modal">
+              <div :style="editModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="edit-modal">
                   <div class="answer-to-comment-modal">
                       <form action="#">
-                          <textarea  x-model="content" name="" id="answer-edit-modal-textarea" cols="50" rows="20"></textarea>
-                          <button @click="editComment" class="answer-submit-btn">ثبت پاسخ</button>
+                          <textarea  x-model="content" name="" id="edit-modal-textarea" cols="50" rows="20"></textarea>
+                          <button @click="editComment" class="answer-submit-btn">ویرایش نظر کاربر</button>
                           <button @click="editModalFlag=false" class="answer-submit-btn">بستن</button>
                       </form>
                   </div>
               </div>
           </template>
-
+          <!--  answer Modal -->
+          <template x-teleport="body">
+              <div :style="answerModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="answer-modal">
+                  <div class="answer-to-comment-modal">
+                      <form action="#">
+                          <textarea  x-model="content" name="" id="answer-modal-textarea" cols="50" rows="20"></textarea>
+                          <button @click="answerComment" class="answer-submit-btn">ثبت نظر</button>
+                          <button @click="answerModalFlag=false" class="answer-submit-btn">بستن</button>
+                      </form>
+                  </div>
+              </div>
+          </template>
+          <!-- Delete Modal -->
+          <template x-teleport="body">
+              <div :style="deleteModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="delete-modal">
+                  <div class="delete-modal">
+                      <h1>ایا از حذف محصول اطمینان دارید؟</h1>
+                      <div class="delete-modal-btns">
+                          <button @click="deleteComment" class="delete-btn delete-modal-accept-btn">بله</button>
+                          <button @click="deleteModalFlag=false" class="delete-btn delete-modal-reject-btn">خیر</button>
+                      </div>
+                  </div>
+              </div>
+          </template>
 
 
         <h1 class="cms-title">کامنت های محصولات</h1>
@@ -128,7 +145,7 @@
               </tr>
 
               <template x-for="item in commentsList">
-                  <tr>
+                  <tr x-show="item.isReply===0">
                       <td x-text="`${item.firstname} ${item.lastname}`"></td>
                       <td x-text="item.productTitle"></td>
                       <td>
@@ -138,10 +155,10 @@
                       <td x-text="item.hour"></td>
 
                       <td>
-                          <button >حذف</button>
-<!--                          <button>رد</button>-->
-                          <button>تایید</button>`
-                          <button >پاسخ</button>
+                          <button @click="openDeleteModal(item.id)">حذف</button>
+                          <button @click="changeCommentStatus(0,item.id)" x-show="item.isAccept===1">رد</button>
+                          <button @click="changeCommentStatus(1,item.id)" x-show="item.isAccept===0">تایید</button>
+                          <button @click="openAnswerModal(item.id)">پاسخ</button>
                           <button @click="openEditModal(item.id)">ویرایش</button>
                       </td>
                   </tr>

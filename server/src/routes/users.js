@@ -37,6 +37,7 @@ router.delete('/:id',(req,res)=>{
     then(()=>{
         res.status(200).send(h.responseHandler(false,'user deleted',null))
     }).catch(err=>{
+	
         res.status(200).send(h.responseHandler(true,'error in connecting to db',null))
     })
 })

@@ -13,126 +13,10 @@
 
   </head>
   <body>
-    <!-- Delete Modal -->
-    <div class="modal" id="delete-modal">
-      <div class="delete-modal">
-        <h1>ایا از حذف محصول اطمینان دارید؟</h1>
-        <div class="delete-modal-btns">
-          <button class="delete-btn delete-modal-accept-btn">بله</button>
-          <button class="delete-btn delete-modal-reject-btn">خیر</button>
-        </div>
-      </div>
-    </div>
 
-    <div class="modal" id="update-modal">
-      <div class="edit-users-info-modal">
-        <form action="#">
 
-          <h1>تغییر اطلاعات کاربر</h1>
 
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-cursor-text"></i></span>
-              <input
-                type="text"
-                placeholder="نام جدید کاربر"
-                class="edit-user-info-input"
-                id="update-modal-firstname-input"
-              />
-            </div>
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-currency-dollar"></i></span>
-              <input
-                type="text"
-                placeholder="نام خانوادگی جدید"
-                class="edit-user-info-input"
-                id="update-modal-lastname-input"
-              />
-            </div>
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-currency-dollar"></i></span>
-              <input
-                type="text"
-                placeholder="نام کاربری جدید"
-                class="edit-user-info-input"
-                id="update-modal-username-input"
-              />
-            </div>
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-bag"></i></span>
-              <input
-                type="text"
-                placeholder="رمز عبور جدید کاربر"
-                class="edit-user-info-input"
-                id="update-modal-password-input"
-              />
-            </div>
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-card-image"></i></span>
-              <input
-                type="text"
-                placeholder="شماره تماس جدید کاربر"
-                class="edit-user-info-input"
-                id="update-modal-phone-input"
-              />
-            </div>
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-card-image"></i></span>
-              <input
-                type="text"
-                placeholder="ایمیل جدید کاربر"
-                class="edit-user-info-input"
-                id="update-modal-email-input"
-              />
-            </div>
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-card-image"></i></span>
-              <input
-                type="text"
-                placeholder="شهر جدید کاربر"
-                class="edit-user-info-input"
-                id="update-modal-city-input"
-              />
-            </div>
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-card-image"></i></span>
-              <input
-                type="text"
-                placeholder="میزان خرید جدید کاربر"
-                class="edit-user-info-input"
-                id="update-modal-buy-input"
-              />
-            </div>
-            <div class="edit-user-info-input-grout">
-              <span><i class="bi bi-card-image"></i></span>
-              <input
-                type="text"
-                placeholder="امتیاز جدید کاربر"
-                class="edit-user-info-input"
-                id="update-modal-score-input"
-              />
-            </div>
-          <button class="edit-user-info-submit">ثبت اطلاعات جدید</button>
-        </form>
-      </div>
-    </div>
 
-    <div class="modal" id="details-modal">
-      <div class="user-details-modal">
-        <table class="cms-table">
-          <tr>
-            <th>شهر</th>
-            <th>میزان خرید</th>
-            <th>امتیاز کاربر</th>
-          </tr>
-
-          <tr>
-            <td id="user-city-td">تبریز</td>
-            <td id="user-buy-td">19,000,000</td>
-            <td id="user-score-td">30</td>
-          </tr>
-        </table>
-      </div>
-    </div>
     
     <aside class="sidebar">
       <h1 class="sidebar-title">به داشبورد خود خوش آمدید</h1>
@@ -196,35 +80,170 @@
         </div>
       </div>
 
-      <div class="cms-main">
-        
+      <div x-data="users" @keyup.esc.window="closeAllModal" x-init="getAllUsers" class="cms-main">
+<!--          detail modal-->
+          <template x-teleport="body">
+              <div :style="detailModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'"  class="modal" id="details-modal">
+                  <div class="user-details-modal">
+                      <table class="cms-table">
+                          <tr>
+                              <th>شهر</th>
+                              <th>میزان خرید</th>
+                              <th>امتیاز کاربر</th>
+                          </tr>
+
+                          <tr>
+                              <td x-text="getUser?.city ?? ''" id="user-city-td"></td>
+                              <td x-text="getUser?.buy ?? ''" id="user-buy-td"></td>
+                              <td x-text="getUser?.score ?? ''" id="user-score-td"></td>
+                          </tr>
+                      </table>
+                  </div>
+              </div>
+          </template>
+          <!-- Delete Modal -->
+          <template x-teleport="body">
+              <div :style="deleteModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="delete-modal">
+                  <div class="delete-modal">
+                      <h1>ایا از حذف محصول اطمینان دارید؟</h1>
+                      <div class="delete-modal-btns">
+                          <button @click="deleteUser" class="delete-btn delete-modal-accept-btn">بله</button>
+                          <button @click="deleteModalFlag=false" class="delete-btn delete-modal-reject-btn">خیر</button>
+                      </div>
+                  </div>
+              </div>
+          </template>
+<!--           edit modal-->
+          <template x-teleport="body">
+              <div :style="editModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal" id="update-modal">
+                  <div class="edit-users-info-modal">
+                      <form @submit.prevent="editUser" action="#">
+
+                          <h1>تغییر اطلاعات کاربر</h1>
+
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-cursor-text"></i></span>
+                              <input
+                                      x-model="firstname"
+                                      type="text"
+                                      placeholder="نام جدید کاربر"
+                                      class="edit-user-info-input"
+                                      id="update-modal-firstname-input"
+                              />
+                          </div>
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-currency-dollar"></i></span>
+                              <input
+                                      x-model="lastname"
+                                      type="text"
+                                      placeholder="نام خانوادگی جدید"
+                                      class="edit-user-info-input"
+                                      id="update-modal-lastname-input"
+                              />
+                          </div>
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-currency-dollar"></i></span>
+                              <input
+                                      x-model="username"
+                                      type="text"
+                                      placeholder="نام کاربری جدید"
+                                      class="edit-user-info-input"
+                                      id="update-modal-username-input"
+                              />
+                          </div>
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-bag"></i></span>
+                              <input
+                                      x-model="password"
+                                      type="text"
+                                      placeholder="رمز عبور جدید کاربر"
+                                      class="edit-user-info-input"
+                                      id="update-modal-password-input"
+                              />
+                          </div>
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-card-image"></i></span>
+                              <input
+                                      x-model="phone"
+                                      type="text"
+                                      placeholder="شماره تماس جدید کاربر"
+                                      class="edit-user-info-input"
+                                      id="update-modal-phone-input"
+                              />
+                          </div>
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-card-image"></i></span>
+                              <input
+                                      x-model="email"
+                                      type="text"
+                                      placeholder="ایمیل جدید کاربر"
+                                      class="edit-user-info-input"
+                                      id="update-modal-email-input"
+                              />
+                          </div>
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-card-image"></i></span>
+                              <input
+                                      x-model="city"
+                                      type="text"
+                                      placeholder="شهر جدید کاربر"
+                                      class="edit-user-info-input"
+                                      id="update-modal-city-input"
+                              />
+                          </div>
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-card-image"></i></span>
+                              <input
+                                      x-model="buy"
+                                      type="text"
+                                      placeholder="میزان خرید جدید کاربر"
+                                      class="edit-user-info-input"
+                                      id="update-modal-buy-input"
+                              />
+                          </div>
+                          <div class="edit-user-info-input-grout">
+                              <span><i class="bi bi-card-image"></i></span>
+                              <input
+                                      x-model="score"
+                                      type="text"
+                                      placeholder="امتیاز جدید کاربر"
+                                      class="edit-user-info-input"
+                                      id="update-modal-score-input"
+                              />
+                          </div>
+                          <button class="edit-user-info-submit">ثبت اطلاعات جدید</button>
+                      </form>
+                  </div>
+              </div>
+
+          </template>
+
+
         <h1 class="cms-title">لیست کاربران</h1>
 
-        
-
-        <!-- <table class="cms-table">
-          <tr>
-            <th>نام و نام خانوادگی</th>
-            <th>یوزرنیم</th>
-            <th>دمز عبور</th>
-            <th>شماره تماس</th>
-            <th>ایمیل</th>
-          </tr>
-
-          <tr>
-            <td>امین سعیدی</td>
-            <td>01010101</td>
-            <td>amin_1834</td>
-            <td>09921558293</td>
-            <td>ce01010101it@gmail.com</td>
-            <td>
-              <button>حذف</button>
-              <button>جزییات</button>
-              <button>ویرایش</button>
-            </td>
-          </tr>
-
-        </table> -->
+          <table class="cms-table users-table">
+              <tr>
+                  <th>نام و نام خانوادگی</th>
+                  <th>یوزرنیم</th>
+                  <th>رمز عبور</th>
+                  <th>شماره تماس</th>
+                  <th>ایمیل</th>
+              </tr>
+              <template x-for="item in allUsersList">
+                  <tr>
+                      <td x-text="`${item.firstname} ${item.lastname}`">امین سعیدی</td>
+                      <td x-text="item.username">01010101</td>
+                      <td x-text="item.password">amin_1834</td>
+                      <td x-text="item.phone">09921558293</td>
+                      <td x-text="item.email">ce01010101it@gmail.com</td>
+                      <td>
+                          <button @click="openDeleteModal(item.id)">حذف</button>
+                          <button @click="openDetailModal(item.id)">جزییات</button>
+                          <button @click="openEditModal(item.id)">ویرایش</button>
+                      </td>
+                  </tr>
+              </template>
+          </table>
       </div>
 
 

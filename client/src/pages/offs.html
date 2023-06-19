@@ -13,16 +13,6 @@
 
   </head>
   <body>
-    <!-- Delete Modal -->
-    <div class="modal">
-      <div class="delete-modal">
-        <h1>ایا از حذف کد تخفیف اطمینان دارید؟</h1>
-        <div class="delete-modal-btns">
-          <button class="delete-btn delete-modal-accept-btn">بله</button>
-          <button class="delete-btn delete-modal-reject-btn">خیر</button>
-        </div>
-      </div>
-    </div>
 
     <aside class="sidebar">
       <h1 class="sidebar-title">به داشبورد خود خوش آمدید</h1>
@@ -86,75 +76,50 @@
         </div>
       </div>
 
-      <div class="cms-main">
-        <h1 class="cms-title">لیست کد های تخفیف ثبت شده</h1>
+      <div x-data="offers" x-init="getOffersList" class="cms-main">
+          <!-- Delete Modal -->
+          <template x-teleport="body">
+              <div :style="deleteModalFlag ? 'visibility:visible;opacity:1' : 'visibility:hidden;opacity:0'" class="modal">
+                  <div class="delete-modal">
+                      <h1>ایا از حذف کد تخفیف اطمینان دارید؟</h1>
+                      <div class="delete-modal-btns">
+                          <button @click="deleteOffer" class="delete-btn delete-modal-accept-btn">بله</button>
+                          <button @click="deleteModalFlag=false" class="delete-btn delete-modal-reject-btn">خیر</button>
+                      </div>
+                  </div>
+              </div>
+          </template>
 
-        <div class="cms-empty-err">هیچ کد تخفیفی یافت نشد</div>
+
+
+          <h1 class="cms-title">لیست کد های تخفیف ثبت شده</h1>
+
+        <div x-show="offersList.length===0" class="cms-empty-err">هیچ کد تخفیفی یافت نشد</div>
 
         <table class="cms-table">
-          <tr>
+          <tr x-show="offersList.length>0">
             <th>کد تخفیف</th>
             <th>درصد تخفیف</th>
             <th>تاریخ ثبت</th>
             <th>ثبت شده توسط</th>
             <th>ساخته شده برای</th>
           </tr>
+            <template x-for="item in offersList">
+                <tr>
+                    <td x-text="item.code"></td>
+                    <td x-text="item.percent+'%'"></td>
+                    <td x-text="item.date"></td>
+                    <td x-text="`${item.firstname} ${item.lastname}`"></td>
+                    <td x-text="item.productTitle"></td>
+                    <td>
+                        <button @click="changeOfferStatus(0,item.id)" x-show="item.isActive===1">رد</button>
+                        <button @click="changeOfferStatus(1,item.id)" x-show="item.isActive===0">تایید</button>
+                        <button @click="openDeleteModal(item.id)">حذف</button>
+                    </td>
+                </tr>
+            </template>
 
-          <tr>
-            <td>rad-react</td>
-            <td>20%</td>
-            <td>۱۲ شهریور ۱۴۰۱</td>
-            <td>قدیر یلمه</td>
-            <td>لپتاپ مک‌‌ بوک</td>
-            <td>
-              <button>تایید</button>
-              <button>حذف</button>
-            </td>
-          </tr>
-          <tr>
-            <td>rad-react</td>
-            <td>20%</td>
-            <td>۱۲ شهریور ۱۴۰۱</td>
-            <td>قدیر یلمه</td>
-            <td>لپتاپ مک‌‌ بوک</td>
-            <td>
-              <button>تایید</button>
-              <button>حذف</button>
-            </td>
-          </tr>
-          <tr>
-            <td>rad-react</td>
-            <td>20%</td>
-            <td>۱۲ شهریور ۱۴۰۱</td>
-            <td>قدیر یلمه</td>
-            <td>لپتاپ مک‌‌ بوک</td>
-            <td>
-              <button>تایید</button>
-              <button>حذف</button>
-            </td>
-          </tr>
-          <tr>
-            <td>rad-react</td>
-            <td>20%</td>
-            <td>۱۲ شهریور ۱۴۰۱</td>
-            <td>قدیر یلمه</td>
-            <td>لپتاپ مک‌‌ بوک</td>
-            <td>
-              <button>تایید</button>
-              <button>حذف</button>
-            </td>
-          </tr>
-          <tr>
-            <td>rad-react</td>
-            <td>20%</td>
-            <td>۱۲ شهریور ۱۴۰۱</td>
-            <td>قدیر یلمه</td>
-            <td>لپتاپ مک‌‌ بوک</td>
-            <td>
-              <button>تایید</button>
-              <button>حذف</button>
-            </td>
-          </tr>
+
         </table>
       </div>
     </div>

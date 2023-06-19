@@ -5,7 +5,9 @@ const database=require('../database/database')
 
 router.get('/',(req,res)=>{
     database('offers').
-    select('*').
+    join('admin','offers.adminID','=','admin.id').
+    join('products','offers.productID','=','products.id').
+    select('products.title as productTitle','admin.firstname','admin.lastname','offers.code','offers.percent','offers.date','offers.isActive','offers.id').
     then(response=>{
         res.status(200).send(h.responseHandler(false,null,response))
     }).catch(err=>{
