@@ -3,6 +3,9 @@ const fs = require("fs");
 const path=require('path')
 const router=express.Router()
 
+router.get('',(req,res)=>{
+    res.status(200).end()
+})
 
 router.get('/:image',(req,res)=>{
     const imageName=req.params.image;

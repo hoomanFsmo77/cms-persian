@@ -1,8 +1,10 @@
+require('dotenv').config()
 const knex = require('knex');
-const connection = require('./connection.json');
+const prodConnection=require('./connection.prod.json')
+const devConnection=require('./connection.dev.json')
 const database = knex({
     client: 'mysql',
-    connection
+    connection:process.env.PRODUCTION==='1' ? prodConnection : devConnection
 });
 database.
 raw("SELECT 1").

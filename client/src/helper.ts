@@ -1,7 +1,7 @@
 //@ts-ignore
 export enum api {
-    base='http://localhost:9001/api',
-    image='http://localhost:9001/storage/image/'
+    base='https://cms-test.iran.liara.run/api',
+    image='https://cms-test.iran.liara.run/storage/image/'
 }
 export interface IResponse {
     error:boolean,

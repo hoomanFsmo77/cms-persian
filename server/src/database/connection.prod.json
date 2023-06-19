@@ -1,0 +1,7 @@
+{
+  "host": "cms",
+  "port": 3306,
+  "database": "nifty_einstein",
+  "user": "root",
+  "password": "j4NsUC8GO3NEY6xvbPU6zxhy"
+}
