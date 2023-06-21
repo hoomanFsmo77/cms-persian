@@ -5,7 +5,8 @@ const database=require('../database/database')
 
 router.get('/',(req,res)=>{
     database('products').
-    select('*').
+    join('category','products.categoryId','=','category.id').
+    select('category.title as category','products.id','products.title','products.price','products.count','products.img','products.popularity','products.sale','products.colors','products.description','products.url').
     then(response=>{
         res.status(200).send(h.responseHandler(false,null,response))
     }).catch(err=>{
@@ -15,8 +16,9 @@ router.get('/',(req,res)=>{
 router.get('/:id',(req,res)=>{
     const id=req.params.id
     database('products').
-    select('*').
-    where({id}).
+    join('category','products.categoryId','=','category.id').
+    select('category.title as category','products.id','products.title','products.price','products.count','products.img','products.popularity','products.sale','products.colors','products.description','products.url').
+    where('products.id','=',id).
     then(response=>{
         if(response.length>0){
             res.status(200).send(h.responseHandler(false,null,response[0]))
@@ -38,6 +40,24 @@ router.delete('/:id',(req,res)=>{
     }).catch(err=>{
         res.status(200).send(h.responseHandler(true,'error in connecting to db',null))
     })
+})
+
+router.post('/:url',(req,res)=>{
+    const url=req.params.url;
+    database('products').
+    join('category','products.categoryId','=','category.id').
+    select('category.title as category','products.id','products.title','products.price','products.count','products.img','products.popularity','products.sale','products.colors','products.description','products.url').
+    where('products.url','=',url).
+     then(response=>{
+        if(response.length>0){
+            res.status(200).send(h.responseHandler(false,null,response[0]))
+        }else{
+            res.status(200).send(h.responseHandler(true,'product not found',null))
+        }
+    }).catch(err=>{
+        res.status(200).send(h.responseHandler(true,'error in connecting to db',null))
+    })
+    
 })
 
 

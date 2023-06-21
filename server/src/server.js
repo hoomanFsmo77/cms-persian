@@ -34,6 +34,9 @@ const ordersRouter=require('./routes/orders')
 //// offers
 const offersRouter=require('./routes/offers')
 
+//// basket router
+const basketRouter=require('./routes/basket')
+
 ////
 app.use('/storage/image',storageRoute)
 app.use('/api/admin',adminRoute)
@@ -42,5 +45,6 @@ app.use('/api/comments',commentsRouter)
 app.use('/api/users',usersRouter)
 app.use('/api/orders',ordersRouter)
 app.use('/api/offers',offersRouter)
+app.use('/api/basket',basketRouter)
 
 app.listen(process.env.PORT,()=>console.log(`server is running on port ${process.env.PORT}`))
