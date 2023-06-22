@@ -1,0 +1,72 @@
+@import './custom.scss';
+@import './navbar.scss';
+
+.main-title {
+    color: var(--main-red);
+}
+.card {
+    border-radius: 10px;
+    background-color: var(--white);
+    box-shadow:  5px 5px 10px #d6dde3,
+             -5px -5px 10px #ffffff;
+    transition: 0.5s;
+}
+.card.disabled {
+    background-color: #aaaaaa;
+}
+.card:hover {
+    box-shadow:  5px 5px 10px #aab0b5,
+             -5px -5px 10px #ffffff;
+    border: 1px groove rgba(0, 0, 0, 0.5);
+}
+.card-text {
+    font-size: 15px;
+    color: var(--dark);
+}
+main {
+    margin-top: 130px;
+}
+.price {
+    background: var(--dark);
+    color: var(--white);
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+}
+.number {
+    background-color: var(--dark);
+    color: var(--white);
+    font-family: monospace;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-top: 15px;
+}
+.bag-sidebar {
+    position: fixed;
+    top: 0;
+    left: -200px;
+    width: 400px;
+    height: 100vh;
+    background: white;
+    box-shadow: -5px 0 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 9999;
+    overflow-y: auto;
+    transition: .5s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+.bag-sidebar.active {
+    left: 0;
+    opacity: 1;
+    visibility: visible;
+}
+.bag-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.bag-title:last-child {
+    cursor: pointer;
+}

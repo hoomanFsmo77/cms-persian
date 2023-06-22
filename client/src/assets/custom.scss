@@ -4,13 +4,20 @@
     --white: #ffffff;
     --white-50: #f0f0f0;
     --blue: #471AAA;
+    --dark: #001219;
+    --main-white: #f0f8ff;
+    --main-red: #d90429;
 }
 
 @font-face {
     font-family: Lalezar;
     src: url('./Lalezar-Regular.ttf');
 }
-
+@font-face {
+    font-family: vazir;
+    src: url(./Vazir/Vazir.ttf), url(./Vazir/Vazir.eot), url(./Vazir/Vazir.ttf),
+    url(./Vazir/Vazir.woff);
+}
 body {
     background-color: var(--white-50);
 }

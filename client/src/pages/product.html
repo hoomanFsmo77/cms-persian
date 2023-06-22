@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body class='d-block'>
+    <nav class="navbar navbar-expand-sm py-3 d-flex">
+        <div class="container">
+            <div class="header">
+                <a href="" class="navbar-brand">
+                    لوگو
+                </a>
+
+                <ul class="navbar-nav me-auto ms-3">
+
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">خانه</a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="bag-box">
+                <a href="bag.html" class="bag">
+                    <i class="bi bi-bag text-white"></i>
+                    <span id="my-product-number">
+                        0
+                    </span>
+                </a>
+            </div>
+
+        </div>
+    </nav>
+    <section x-data="product" class="intro-product">
+        <div class="container">
+            <div class="row">
+                <div class="col-5">
+                    <div class="intro-produt__left">
+                        <img class="intro-product__img" :src="`http://localhost:9001/storage/image/${productDetail.img}`" alt="">
+                    </div>
+                </div>
+                <div class="col-7">
+                    <div class="intro-product__right">
+                        <a class="intro-product__category" x-text="productDetail.category" href="#"></a>
+                        <h2 href="#" class="intro-product__name" x-text="productDetail.title"></h2>
+                        <p class="intro-product__paragraph" x-text="productDetail.description"></p>
+                        <div class="intro-product__colors-content">
+                            <span class="intro-product__colors-title">رنگ</span>
+                            <div class="intro-product__colors">
+                                <div class="intro-product__color-red intro-product__color"></div>
+                                <div class="intro-product__color-blue intro-product__color"></div>
+                                <div class="intro-product__color-black intro-product__color"></div>
+                            </div>
+                        </div>
+                        <div class="intro-product__bottom">
+                            <span class="intro-product__price" x-text="`${productDetail.price} تومان`"></span>
+                            <button type="button" class="intro-product__btn">اضافه کردن به سبد خرید</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <footer class="footer">
+        <span class="footer__text">تمامی حقوق برای آکادمی سبزلرن محفوظ میباشد.</span>
+    </footer>
+
+<!--    <script src="content/js/product.js"></script>-->
+</body>
+
+</html>

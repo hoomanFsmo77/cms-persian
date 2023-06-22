@@ -3,12 +3,28 @@ const router=express.Router()
 const h=require('../helper')
 const database=require('../database/database')
 
+const sortByCategory = (arr) => {
+    return arr.reduce((p1,p2)=>{
+        if(!p1[p2.category]) {
+            return {
+                ...p1,
+                [p2.category]: [{...p2}]
+            }
+        }else{
+            return  {...p1,...p1[p2.category].push(p2)}
+        }
+    },{})
+}
+
+
+
+
 router.get('/',(req,res)=>{
     database('products').
     join('category','products.categoryId','=','category.id').
     select('category.title as category','products.id','products.title','products.price','products.count','products.img','products.popularity','products.sale','products.colors','products.description','products.url').
     then(response=>{
-        res.status(200).send(h.responseHandler(false,null,response))
+        res.status(200).send(h.responseHandler(false,null,sortByCategory(response)))
     }).catch(err=>{
         res.status(200).send(h.responseHandler(true,'error in connecting to db',null))
     })
