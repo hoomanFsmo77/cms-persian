@@ -161,6 +161,30 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "get product by url",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api_base}}/products/:url",
+							"host": [
+								"{{api_base}}"
+							],
+							"path": [
+								"products",
+								":url"
+							],
+							"variable": [
+								{
+									"key": "url",
+									"value": "oil-ladan"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -603,6 +627,127 @@
 									"key": "isActive",
 									"value": "1"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "basket",
+			"item": [
+				{
+					"name": "add to basket",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userID\":1,\r\n    \"productID\":2,\r\n    \"count\":2   \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base}}/basket",
+							"host": [
+								"{{api_base}}"
+							],
+							"path": [
+								"basket"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user basket",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base}}/basket/products/:userID",
+							"host": [
+								"{{api_base}}"
+							],
+							"path": [
+								"basket",
+								"products",
+								":userID"
+							],
+							"variable": [
+								{
+									"key": "userID",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "increament or decreamnet",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{api_base}}/basket/:userID/:productID?status=increase",
+							"host": [
+								"{{api_base}}"
+							],
+							"path": [
+								"basket",
+								":userID",
+								":productID"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "increase",
+									"description": "decrease or increase"
+								}
+							],
+							"variable": [
+								{
+									"key": "userID",
+									"value": "1"
+								},
+								{
+									"key": "productID",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base}}/category",
+							"host": [
+								"{{api_base}}"
+							],
+							"path": [
+								"category"
 							]
 						}
 					},

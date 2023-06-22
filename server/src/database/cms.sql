@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 17, 2023 at 07:39 PM
+-- Generation Time: Jun 22, 2023 at 04:44 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -46,6 +46,50 @@ INSERT INTO `admin` (`id`, `image`, `token`, `firstname`, `lastname`, `status`) 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `basket`
+--
+
+CREATE TABLE `basket` (
+  `id` int(100) NOT NULL,
+  `productID` int(100) NOT NULL,
+  `userID` int(100) NOT NULL,
+  `count` int(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+
+--
+-- Dumping data for table `basket`
+--
+
+INSERT INTO `basket` (`id`, `productID`, `userID`, `count`) VALUES
+(50, 3, 1, 2),
+(51, 1, 1, 3),
+(52, 2, 1, 2),
+(53, 5, 1, 2),
+(54, 4, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category`
+--
+
+CREATE TABLE `category` (
+  `id` int(100) NOT NULL,
+  `title` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`id`, `title`) VALUES
+(1, 'گوشی'),
+(2, 'لپتاپ'),
+(3, 'عمومی');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `comments`
 --
 
@@ -55,15 +99,20 @@ CREATE TABLE `comments` (
   `date` varchar(50) NOT NULL,
   `hour` varchar(50) NOT NULL,
   `userID` int(50) NOT NULL,
-  `productID` int(50) NOT NULL
+  `productID` int(50) NOT NULL,
+  `isAccept` tinyint(1) NOT NULL DEFAULT 0,
+  `isReply` tinyint(1) NOT NULL,
+  `replyId` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
 
 --
 -- Dumping data for table `comments`
 --
 
-INSERT INTO `comments` (`id`, `body`, `date`, `hour`, `userID`, `productID`) VALUES
-(1, 'من از این محصول رضایت دارم', '1401-5-5', '20:20', 1, 5);
+INSERT INTO `comments` (`id`, `body`, `date`, `hour`, `userID`, `productID`, `isAccept`, `isReply`, `replyId`) VALUES
+(1, 'عالی', '1401-5-5', '20:20', 1, 5, 0, 0, 0),
+(8, 'ریدی', '1401-9-8', '23:21', 1, 5, 0, 1, 1),
+(11, 'nide', '2022-5-5', '20:10', 1, 30, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -86,7 +135,8 @@ CREATE TABLE `offers` (
 --
 
 INSERT INTO `offers` (`id`, `code`, `percent`, `adminID`, `productID`, `date`, `isActive`) VALUES
-(1, 'rad_50', 50, 1, 1, '1401-5-5', 1);
+(2, 'hoo_99', 69, 1, 2, '1401-5-5', 0),
+(3, 'rcee55', 20, 1, 3, '1401-6-6', 0);
 
 -- --------------------------------------------------------
 
@@ -114,7 +164,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `productID`, `userID`, `date`, `hour`, `price`, `off`, `sale`, `popularity`, `count`, `sale_count`, `isActive`) VALUES
-(1, 5, 1, '1401-5-5', '20:20', 69000, 50, 6900, 90, 6, 60, 0);
+(2, 18, 1, '1401-5-5', '20:50', 69000, 65, 20, 99, 6, 896, 0);
 
 -- --------------------------------------------------------
 
@@ -130,19 +180,24 @@ CREATE TABLE `products` (
   `img` varchar(50) NOT NULL,
   `popularity` int(50) NOT NULL,
   `sale` int(50) NOT NULL,
-  `colors` int(50) NOT NULL
+  `colors` int(50) NOT NULL,
+  `description` varchar(5000) NOT NULL,
+  `url` varchar(100) NOT NULL,
+  `categoryId` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `title`, `price`, `count`, `img`, `popularity`, `sale`, `colors`) VALUES
-(1, 'هنذفری بلوتوثی', 659000, 5, 'head.jpeg', 89, 1900000, 3),
-(2, 'هدست مخصوص بازی', 89000, 15, 'headphone.jpeg', 92, 69000, 2),
-(3, 'شارژر Type-C', 56000, 18, 'charger.jpeg', 88, 2000, 3),
-(4, 'روغن سرخ کردنی لادن', 100000, 85, 'oil.jpeg', 95, 67700, 1),
-(5, 'صابون گلنار', 18000, 20, 'soap.jpeg', 99, 550000, 2);
+INSERT INTO `products` (`id`, `title`, `price`, `count`, `img`, `popularity`, `sale`, `colors`, `description`, `url`, `categoryId`) VALUES
+(1, 'هنذفری بلوتوثی', 659000, 5, 'head.jpeg', 89, 1900000, 3, 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی ', '', 1),
+(2, 'هدست مخصوص بازی', 89000, 15, 'headphone.jpeg', 92, 69000, 2, 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی ', '', 2),
+(3, 'شارژر Type-C', 56000, 18, 'charger.jpeg', 88, 2000, 3, 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی ', '', 1),
+(4, 'روغن سرخ کردنی لادن', 100000, 85, 'oil.jpeg', 95, 67700, 1, 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی ', 'oil-ladan', 3),
+(5, 'صابون گلنار', 18000, 20, 'soap.jpeg', 99, 550000, 2, 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی ', '', 3),
+(18, 'تیشرت', 65000, 6, 'tshirt.jpeg', 99, 36000, 3, 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی ', '', 3),
+(30, 'T-Shirt', 90000, 100, 'tshirt.jpeg', 100, 100, 100, 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی ', '', 3);
 
 -- --------------------------------------------------------
 
@@ -169,7 +224,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `phone`, `email`, `city`, `address`, `score`, `buy`) VALUES
-(1, 'هومن', 'موسوی', 'hooman_77', '8585', 9921929653, 'hoo', 'تهران', 'پردیس', 22, 45);
+(1, 'رضا', 'موسوی', 'hooman_88', '8585', 9921929653, 'hoo', 'تهران', 'پردیس', 22, 45);
 
 --
 -- Indexes for dumped tables
@@ -179,6 +234,20 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `pho
 -- Indexes for table `admin`
 --
 ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `basket`
+--
+ALTER TABLE `basket`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `productID` (`productID`),
+  ADD KEY `userID` (`userID`);
+
+--
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -209,7 +278,8 @@ ALTER TABLE `orders`
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `categoryId` (`categoryId`);
 
 --
 -- Indexes for table `users`
@@ -228,38 +298,57 @@ ALTER TABLE `admin`
   MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `basket`
+--
+ALTER TABLE `basket`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+
+--
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `offers`
 --
 ALTER TABLE `offers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `basket`
+--
+ALTER TABLE `basket`
+  ADD CONSTRAINT `basket_ibfk_1` FOREIGN KEY (`productID`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `basket_ibfk_2` FOREIGN KEY (`userID`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `comments`
@@ -281,6 +370,12 @@ ALTER TABLE `offers`
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`productID`) REFERENCES `products` (`id`),
   ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`userID`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`categoryId`) REFERENCES `category` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
